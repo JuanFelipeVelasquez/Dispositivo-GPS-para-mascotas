@@ -1,0 +1,452 @@
+import sqlite3
+from sqlite3 import Error
+from datetime import datetime
+
+    
+class Atleta:                             #se crea la clase Atleta para agrupar variables y funciones relacionadas de un objeto 
+    def __init__(self):
+        self.__noidAtleta=None
+        self.__noInscripcion=None
+        self.__nombre=None
+        self.__apellido=None
+        self.__fechaNacimiento=None
+        self.__paisOrigen=None
+        self.__ciudadOrigen=None
+
+    def setnoidAtleta(self):
+        self.__noidAtleta = input("Identificacion del Atleta ")
+        #self.__noidAtleta=self.__noidAtleta.ljust(12)  #el numero es el campo al cual se va a ajustar
+    def setnoInscripcion(self):
+        self.__noInscripcion = input("Numero de Inscripcion ")
+    def setnombre(self):
+        self.__nombre = input("Nombre del Atleta: ")
+    def setapellido(self):
+        self.__apellido = input("Apellido del Atleta ")
+    def setfechaNacimiento(self):
+        FN = input("Fecha de Nacimiento del Atleta  (AAAA-MM-DD)" )
+        self.__fechaNacimiento=datetime.strptime(FN,'%Y-%m-%d').date()
+    def setpaisOrigen(self):
+        self.__paisOrigen = input("Pais de Origen ")
+    def setciudadOrigen(self):
+        self.__ciudadOrigen = input("Ciudad de Origen ")
+    def armarTupla(self):
+        atleta=( self.__noidAtleta,self.__noInscripcion,self.__nombre,self.__apellido,self.__fechaNacimiento,self.__paisOrigen,self.__ciudadOrigen)
+        return atleta   
+
+    def insertarTablaAtleta(self,con,miAtleta):
+        cursorObj=con.cursor()
+        cad='''INSERT INTO ATLETA VALUES(?,?,?,?,?,?,?)'''
+        cursorObj.execute(cad,miAtleta)
+        con.commit()
+        print(" Nuevo Atleta Creado")
+
+    def insertarTablaAtleta2(self,con):
+        cursorObj=con.cursor()
+        noidAtleta = input("Identificacion del Atleta ")
+        #noidAtleta=noidAtleta.ljust(12)  #el numero es ekl campo al cual se va a ajustar
+        noInscripcion = input("Numero de Inscripcion ")
+        cad='INSERT INTO ATLETA VALUES('+noidAtleta+','+noInscripcion+',"NN","AP","2010-01-23","COL","VILLAV")'
+        print ("La cadena es ", cad)
+        cursorObj.execute(cad)
+        con.commit()
+
+    def consultaTablaAtleta(self,con):
+        cursorObj=con.cursor()
+        #cad='SELECT noidAtleta, noInscripcion FROM atleta'
+        #cad='SELECT * FROM atleta WHERE apellido LIKE "A%"'
+        valor=input("No ID Atleta")
+        cad='SELECT * FROM atleta WHERE noidAtleta="'+valor+'"'
+        cursorObj.execute(cad)
+        filas=cursorObj.fetchall()
+        for row in filas:
+            idAtleta=row[0]
+            inscripcion=row[1]
+            nombre=row[2]
+            apellido=row[3]
+            fechaNacimiento=row[4]
+            paisOrigen=row[5]
+            ciudadOrigen=row[6]
+            print("ID :                    ",idAtleta)
+            print("Numero de inscripcion : ", inscripcion)
+            print("NOMBRE :                ",nombre)
+            print("APELLIDO :              ",apellido)
+            print("FECHA DE NACIMIENTO :   ",fechaNacimiento)
+            print("PAIS :                  ",paisOrigen)
+            print("CIUDAD :                ",ciudadOrigen)
+            
+
+    def otroTipoConsulta(self,con):
+        cursorObj=con.cursor()
+        cad='SELECT count(*) FROM atleta'
+        cursorObj.execute(cad)
+        cantidadAtletas=cursorObj.fetchall()
+        print("El tipo de dato de cantidad de atletas es: ",type(cantidadAtletas))
+        for row in  cantidadAtletas:
+            cantidad=row[0]
+        print ("La cantidad de atletas en la base de datos es: ",cantidad)
+        con.commit()
+
+    def sumaColumna(self,con):
+        cursorObj=con.cursor()
+        cad='SELECT count(*) FROM atleta'
+        cursorObj.execute(cad)
+        cantidadAtletas=cursorObj.fetchall()
+        print("El tipo de dato de cantidad de atletas es: ",type(cantidadAtletas))
+        for row in  cantidadAtletas:
+            cantidad=row[0]
+        print ("La cantidad de atletas en la base de datos es: ",cantidad)
+        cad='SELECT sum (noInscripcion) FROM atleta'
+        cursorObj.execute(cad)
+        sumaNoInscripcion=cursorObj.fetchall()
+        for row in sumaNoInscripcion :
+            cantidad=row[0]
+        print ("La suma de  en la base de datos es: ",cantidad)
+        con.commit()
+        
+        #rertytre
+    def actualizarAtletaID(self,con):
+        cursorObj=con.cursor()
+        valor=input("No ID Atleta")
+        filas=cursorObj.fetchall()
+        nuevoEv=input(" Nuevo ID Atleta")
+        event='UPDATE atleta SET noidAtleta="'+nuevoEv+'" WHERE noidAtleta="'+valor+'"'
+        cursorObj.execute(event)
+        con.commit()
+        print ("            ID Atleta Actualizado")
+        return(valor)
+        #dfghgfdsdfghgfd
+
+    def actualizarAtletaInscripcion(self,con):
+        cursorObj=con.cursor()
+        valor=input("No ID Atleta")
+        filas=cursorObj.fetchall()
+        nuevoEv=input(" Nuevo Numero Inscripcion Atleta")
+        event='UPDATE atleta SET noInscripcion="'+nuevoEv+'" WHERE noidAtleta="'+valor+'"'
+        cursorObj.execute(event)
+        con.commit()
+        print ("             Numero Inscripcion Atleta Actualizado")
+
+    def actualizarAtletaNombre(self,con):
+        cursorObj=con.cursor()
+        valor=input("No ID Atleta")
+        filas=cursorObj.fetchall()
+        nuevoEv=input(" Nuevo Nombre Atleta")
+        event='UPDATE atleta SET nombre="'+nuevoEv+'" WHERE noidAtleta="'+valor+'"'
+        cursorObj.execute(event)
+        con.commit()
+        print ("            Nombre Atleta Actualizado")
+
+    def actualizarAtletaApellido(self,con):
+        cursorObj=con.cursor()
+        valor=input("No ID Atleta")
+        filas=cursorObj.fetchall()
+        nuevoEv=input(" Nuevo Apellido Atleta")
+        event='UPDATE atleta SET apellido="'+nuevoEv+'" WHERE noidAtleta="'+valor+'"'
+        cursorObj.execute(event)
+        con.commit()
+        print ("            Apellido Atleta Actualizado")
+
+    def actualizarAtletaNac(self,con):
+        cursorObj=con.cursor()
+        valor=input("No ID Atleta")
+        filas=cursorObj.fetchall()
+        nuevoEv=input(" Fecha Nacimiento ID Atleta")
+        event='UPDATE atleta SET fechaNacimiento="'+nuevoEv+'" WHERE noidAtleta="'+valor+'"'
+        cursorObj.execute(event)
+        con.commit()
+        print ("            fecha Nacimiento Atleta Actualizado")
+
+    def actualizarAtletaPais(self,con):
+        cursorObj=con.cursor()
+        valor=input("No ID Atleta")
+        filas=cursorObj.fetchall()
+        nuevoEv=input(" Nuevo Pais Atleta")
+        event='UPDATE atleta SET paisOrigen="'+nuevoEv+'" WHERE noidAtleta="'+valor+'"'
+        cursorObj.execute(event)
+        con.commit()
+        print ("            Pais Atleta Actualizado")
+
+    def actualizarAtletaCiudad(self,con):
+        cursorObj=con.cursor()
+        valor=input("No ID Atleta")
+        filas=cursorObj.fetchall()
+        nuevoEv=input(" Nueva Ciudad Atleta")
+        event='UPDATE atleta SET ciudadOrigen="'+nuevoEv+'" WHERE noidAtleta="'+valor+'"'
+        cursorObj.execute(event)
+        con.commit()
+        print ("            ciudad Origen Atleta Actualizado")
+        
+        
+    def actualizarTablaAtleta(self,con):
+        cursorObj=con.cursor()
+        cad='UPDATE atleta SET nombre="carlos" WHERE apellido="gil"'
+        print (cad)
+        cursorObj.execute(cad)
+        con.commit()
+        print("       Atleta Actualizado     ")
+        
+
+def creartablaCarrera(con):
+    cursorObj=con.cursor()
+    cad='''CREATE TABLE IF NOT EXISTS carrera(
+    noEvento text NOT NULL,
+    noidAtleta integer NOT NULL,
+    PosicionAtleta text NOT NULL,
+    Nombre text,
+    Apellido text,
+    tiempoEmpleado text, 
+    EstadoAtleta text,
+    PRIMARY KEY (noidAtleta,noEvento)
+    )
+    '''
+    cursorObj.execute(cad)
+    con.commit()
+
+def actCarrera(con):
+    cursorObj=con.cursor()
+    valor=input("No ID del Atleta   ")
+    cad='SELECT * FROM atleta WHERE noidAtleta="'+valor+'"'
+    cursorObj.execute(cad)
+    filas=cursorObj.fetchall()
+    for row in filas:
+        idAtleta=row[0]
+        NoEventoc="01"
+        Posicion="01"
+        nombrecar=row[2]
+        apellidot=row[3]
+        tiempo="00:00"
+        EstadoAtleta="Activo"
+        care=(NoEventoc,idAtleta,Posicion,nombrecar,apellidot,tiempo,EstadoAtleta)
+    carr=care
+    return carr
+
+def consultaTablaCarreras(con):
+    cursorObj=con.cursor()
+    valor=input("ID Atleta")
+    cad='SELECT * FROM carrera WHERE noidAtleta="'+valor+'"'
+    cursorObj.execute(cad)
+    filas=cursorObj.fetchall()
+    for row in filas:
+        event=row[0]
+        idatle=row[1]
+        posicion=row[2]
+        nombree=row[3]
+        apellidoo=row[4]
+        tiempo=row[5]
+        estado=row[6]
+        print("Evento numero :  ", event)
+        print("Numero de ID :   ", idatle)
+        print("Posicion :       ", posicion)
+        print("NOMBRE :         ", nombree)
+        print("APELLIDO :       ", apellidoo)
+        print("TIEMPO :         ", tiempo)
+        print("ESTADO :         ", estado)
+    
+def consultarCarreraInscripcion(con,infoCarrera):
+    cursorObj=con.cursor()
+    info='''INSERT INTO carrera VALUES(?,?,?,?,?,?,?)'''
+    cursorObj.execute(info,infoCarrera)
+    print("                        Atleta en Carrera Creado")
+    con.commit()
+
+
+def actualizarCarreraEvento(con):
+    cursorObj=con.cursor()
+    valor=input("No ID Atleta")
+    filas=cursorObj.fetchall()
+    nuevoEv=input("Numero Evento a Modificar")
+    event='UPDATE carrera SET noEvento="'+nuevoEv+'" WHERE noidAtleta="'+valor+'"'
+    cursorObj.execute(event)
+    con.commit()
+    print ("             Numero Evento Actualizado")
+
+def actualizarCarreraTiempo(con):
+    cursorObj=con.cursor()
+    valor=input("No ID Atleta")
+    filas=cursorObj.fetchall()
+    nuevoEv=input("Tiempo Atleta a Modificar")
+    event='UPDATE carrera SET tiempoEmpleado="'+nuevoEv+'" WHERE noidAtleta="'+valor+'"'
+    cursorObj.execute(event)
+    con.commit()
+    print ("            Tiempo Atleta Actualizado")
+
+
+def actualizarCarreraPosicion(con):
+    cursorObj=con.cursor()
+    valor=input("No ID Atleta")
+    filas=cursorObj.fetchall()
+    nuevoEv=input("Posicion Atleta a Modificar")
+    event='UPDATE carrera SET PosicionAtleta="'+nuevoEv+'" WHERE noidAtleta="'+valor+'"'
+    cursorObj.execute(event)
+    con.commit()
+    print ("           Posicion Atleta Actualizado")
+
+
+def actualizarCarreraEstado(con):
+    cursorObj=con.cursor()
+    valor=input("No ID Atleta")
+    filas=cursorObj.fetchall()
+    nuevoEv=input("Estado Atleta a Modificar")
+    event='UPDATE carrera SET EstadoAtleta="'+nuevoEv+'" WHERE noidAtleta="'+valor+'"'
+    cursorObj.execute(event)
+    con.commit()
+    print ("           Estado Atleta Actualizado")
+
+    
+def borrarInfoCarrera(con):
+    cursorObj=con.cursor()
+    EstadoAtleta=input("Ciudad: ")
+    cad='DELETE FROM carrera WHERE EstadoAtleta LIKE "'+EstadoAtleta+'%"'
+    print (cad)
+    cursorObj.execute(cad)
+    con.commit()
+    print("Borrar info Tabla")
+
+def borrarTablaCarrera(con):
+    cursorObj=con.cursor()
+    cad='DROP TABLE resultado'
+    print (cad)
+    cursorObj.execute(cad)
+    con.commit()
+    print("Borrar Tabla de Carrera")
+
+
+def creartablaResultados(con):
+    cursorObj=con.cursor()
+    cad='''CREATE TABLE IF NOT EXISTS resultado(
+    noInscripcion text NOT NULL,
+    Nombre text,
+    Apellido text,
+    Fecha Nacimiento text,
+    Pais Origen text,
+    ciudad de Origen text,
+    tiempoEmpleado text, 
+    PRIMARY KEY (noInscripcion)
+    )
+    '''
+    cursorObj.execute(cad)
+    con.commit()
+
+def actResultado(con):
+    cursorObj=con.cursor()
+    valor=input("No Inscripcion del Atleta a consultar  ")
+    cad='SELECT * FROM atleta WHERE noInscripcion="'+valor+'"'
+    cursorObj.execute(cad)
+    filas=cursorObj.fetchall()
+    for row in filas:
+        noInscripcion=row[1]
+        Nombre=row[2]
+        Apellido=row[3]
+        fecha=row[4]
+        PaisOrigen=row[5]
+        ciudaddeOrigen=row[6]
+        
+    cada='SELECT * FROM carrera WHERE Nombre="'+Nombre+'"'
+    cursorObj.execute(cada)
+    filass=cursorObj.fetchall()
+    for row in filass:
+        tiempo=row[5]
+    care=(noInscripcion,Nombre,Apellido,fecha,PaisOrigen,ciudaddeOrigen,tiempo)
+    carr=care
+    return carr
+
+def consultaTablaResultado(con):
+    cursorObj=con.cursor()
+    valor=input("Numero Incripcion")
+    cad='SELECT * FROM resultado WHERE noInscripcion="'+valor+'"'
+    cursorObj.execute(cad)
+    filas=cursorObj.fetchall()
+    for row in filas:
+        event=row[0]
+        nombree=row[1]
+        apellidoo=row[2]
+        fechaa=row[3]
+        paisOrigen=row[4]
+        ciudadOrigen=row[5]
+        tiempo=row[6]
+        print("noInscripcion :      ", event)
+        print("NOMBRE :             ", nombree)
+        print("APELLIDO :           ", apellidoo)
+        print("fecha de Nacimiento :", fechaa)
+        print("Pais de Origen :     ", apellidoo)
+        print("ciudad de Origen :   ", ciudadOrigen)
+        print("Tiempo    :          ", tiempo)
+    
+def consultarCarreraResultado(con,infoCarrera):
+    cursorObj=con.cursor()
+    info='''INSERT INTO resultado VALUES(?,?,?,?,?,?,?)'''
+    cursorObj.execute(info,infoCarrera)
+    print("                       resultado Atleta")
+    con.commit()
+    
+class clasificacion:
+    def __init__(self, con):
+        self.con = con
+
+    def ordenar_clasificacion(self, campo, orden):
+        cursor = self.con.cursor()
+        cursor.execute(f'SELECT * FROM clasificacionfinalyess ORDER BY {campo} {orden}')
+        return cursor.fetchall()
+
+    def actualizar_clasificacion(self):
+        campoCreado = input("Ingrese el campo por el que desea ordenar la clasificación: ")
+        ordenCreado = input("Ingrese el orden en el que desea ordenar la clasificación (ASC o DESC): ")
+
+        cursor = self.con.cursor()
+
+        cursor.execute(
+            'SELECT noInscripcion, nombre, apellido, fechaNacimiento, paisOrigen, ciudadOrigen FROM atleta'
+        )
+        atleta_rows = cursor.fetchall()
+
+        cursor.execute(
+            'SELECT tiempoEmpleado FROM carrera'
+        )
+        carrera_rows = cursor.fetchall()
+
+        rows = []
+
+        min_rows = min(len(atleta_rows), len(carrera_rows))
+        for i in range(min_rows):
+            atleta_data = atleta_rows[i]
+            carrera_data = carrera_rows[i]
+            row = atleta_data + carrera_data
+            rows.append(row)
+
+        field_index = {
+            'noInscripcion': 0,
+            'nombre': 1,
+            'apellido': 2,
+            'FechaNacimiento': 3,
+            'paisOrigen': 4,
+            'ciudadOrigen': 5,
+            'tiempoEmpleado': 6
+        }
+
+        sorted_rows = sorted(rows, key=lambda row: row[field_index[campoCreado]], reverse=(ordenCreado == 'DESC'))
+
+        cursor.execute('DELETE FROM clasificacionfinalyess')
+
+        cursor.executemany(
+            'INSERT INTO clasificacionfinalyess (noInscripcion, nombre, apellido, fechaNacimiento, paisOrigen, ciudadOrigen, tiempoEmpleado) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            sorted_rows
+        )
+
+        self.con.commit()
+        print("Clasificación actualizada.")
+
+    
+def main ():
+    miCon=conexionBD()
+    crearTablaEvento(miCon)
+    creartablaAtleta(miCon)
+    creartablaCarrera(miCon)
+    creartablaResultados(miCon)
+    creartablaclasificacion(miCon)
+    atletaParticipante=Atleta()
+    EventoP=Evento()
+    clasificacionA=clasificacion(miCon)
+    menu(miCon,atletaParticipante,EventoP,clasificacionA)
+    conexionBDclose (miCon)
+
+main()

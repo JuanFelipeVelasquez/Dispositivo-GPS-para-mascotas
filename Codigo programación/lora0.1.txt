@@ -1,0 +1,42 @@
+#include <SPI.h>
+#include <LoRa.h>
+
+#define SS_PIN    5
+#define RST_PIN   4
+#define DI1_PIN   23
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial);
+
+  LoRa.setPins(SS_PIN, RST_PIN, DI1_PIN);
+
+  if (!LoRa.begin(915E6)) {
+    Serial.println("Error inicializando el módulo LoRa. Verifica las conexiones.");
+    while (1);
+  }
+}
+
+void loop() {
+  // Enviar mensaje
+  String mensaje = "¡Hola, mundo!";
+  LoRa.beginPacket();
+  LoRa.print(mensaje);
+  LoRa.endPacket();
+
+  Serial.println("Mensaje enviado: " + mensaje);
+
+  delay(2000);
+
+  // Recibir mensaje
+  if (LoRa.parsePacket()) {
+    String mensajeRecibido = "";
+
+    while (LoRa.available()) {
+      mensajeRecibido += (char)LoRa.read();
+    }
+
+    Serial.println("Mensaje recibido: " + mensajeRecibido);
+  }
+}
+
