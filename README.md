@@ -67,9 +67,9 @@ efectividad del GPS.
 mayor seguridad a los dueños de los mismos.
 * La conección entre modulos lora se facilita al tener microprocesadores iguales en ambos sistemas.
 
-## Video del proyecto
+## Video del proyecto.
 [Video proyecto]()
 
-## Referencias
-[Enlace Referencias]([www.unal.edu.co](https://docs.google.com/document/d/1pl94NhDiLS5le3mnF0FaL84PyjT1eD7dEBsACEJOMd0/edit?usp=sharing))
+## Referencias.
+[Enlace Referencias](https://docs.google.com/document/d/1pl94NhDiLS5le3mnF0FaL84PyjT1eD7dEBsACEJOMd0/edit?usp=sharing)
 
